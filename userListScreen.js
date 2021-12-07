@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
 
 const UserListScreen = () => {
     const [users, setUsers] =
@@ -9,13 +10,19 @@ const UserListScreen = () => {
             .then(res => res.json())
             .then(users => setUsers(users));
     useEffect(findAllUsers, []);
-    return(
+    return (
         <ul>
             {
                 users.map(user =>
-                    <li>{user.passportNumber}</li>)
+                    <li>key={user.passportNumber}
+                        <Link to={`/users/${user.passportNumber}`}>
+                            {user.firstName}
+                        </Link>
+                    </li>
+                )
             }
         </ul>
-    )}
-export default UserListScreen;
+    )
+}
+    export default UserListScreen;
 
