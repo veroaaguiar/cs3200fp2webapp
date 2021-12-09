@@ -1,8 +1,14 @@
 import userService from "./user-service"
-const {useState, useEffect} = React;
-const {useParams, useHistory} = window.ReactRouterDOM;
+import { Button } from 'semantic-ui-react'
+import React from "react";
+import  {useState, useEffect} from 'react';
+import {useParams, useNavigate, Link} from 'react-router-dom';
+
+
 const UserFormEditor = () => {
     const {id} = useParams()
+    console.log(id);
+    const navigate = useNavigate()
     const [user, setUser] = useState({})
     useEffect(() => {
         if(id !== "new") {
@@ -14,36 +20,30 @@ const UserFormEditor = () => {
             .then(user => setUser(user))
     const deleteUser = (id) =>
         userService.deleteUser(id)
-            .then(() => history.back())
+            .then(() => navigate("/"))
     const createUser = (user) =>
         userService.createUser(user)
-            .then(() => history.back())
+            .then(() => navigate("/"))
     const updateUser = (id, newUser) =>
         userService.updateUser(id, newUser)
-            .then(() => history.goBack())
+            .then(() => navigate("/"))
     return (
         <div>
             <h2>User Editor</h2>
             <label>Passport Number</label>
             <input value={user.passportNumber}/><br/>
-            <label>Passport Number</label>
-            <input
-                onChange={(e) =>
-                    setUser(user =>
-                        ({...user, passportNumber: e.target.value}))}
-                value={user.passportNumber}/>
-            <label>Last Name</label>
-            <input
-                onChange={(e) =>
-                    setUser(user =>
-                        ({...user, lastName: e.target.value}))}
-                value={user.lastName}/>
             <label>First Name</label>
             <input
                 onChange={(e) =>
                     setUser(user =>
                         ({...user, firstName: e.target.value}))}
                 value={user.firstName}/>
+            <label>Last Name</label>
+            <input
+                onChange={(e) =>
+                    setUser(user =>
+                        ({...user, lastName: e.target.value}))}
+                value={user.lastName}/>
             <label> Date of Birth </label>
             <input
                 onChange={(e) =>
@@ -56,27 +56,27 @@ const UserFormEditor = () => {
                     setUser(user =>
                         ({...user, password: e.target.value}))}
                 value={user.password}/>
-            <label> Verified? </label>
-            <input
-                onChange={(e) =>
-                    setUser(user =>
-                        ({...user, verified: e.target.value}))}
-                value={user.verified}/>
             <br/>
-            <button onClick={() => {
-                history.back()}}>
+            <Button onClick={() => {
+                navigate("/")}}>
                 Cancel
-            </button>
-            <button  onClick={() => deleteUser(user.id)}>
+            </Button>
+            {id !== "new" &&
+            <Button  onClick={() =>
+                deleteUser(user.id)}>
                 Delete
-            </button>
-            <button  onClick={() => updateUser(user.id, user)}>
+            </Button>}
+            { id !== "new" &&
+            <Button  onClick={() => updateUser(id, user)}>
                 Save
-            </button>
-            <button
+            </Button>}
+            {id == "new" &&
+            <Button
                 onClick={() => createUser(user)}>
                 Create
-            </button>
+            </Button>}
+            <Link to={"/shippingAddresses/:{id}"} className="user list btn">Shipping Address(es) for this User:</Link>
+
         </div>
     )
 }

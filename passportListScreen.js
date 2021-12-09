@@ -11,12 +11,13 @@ const PassportListScreen = () => {
             .then(passports => setPassports(passports));
     useEffect(findAllPassports, []);
     return(
-        <ul>
+        <ul class = "list-group">{JSON.stringify(passports)}
             {
                 passports.map(passport =>
-                    <li key={passport.passportNumber}>
-                        <Link to={`/passports/${passport.passportNumber}`}>
-                            {passport.passportNumber}
+                    <li className="list-group-item"
+                        key={passport.pId}>
+                        <Link to={`/passports/${passport.pId}`}>
+                            Passport Number: {passport.passportNumber}
                         </Link>
                     </li>
                 )
